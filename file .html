@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scarfall 2.0 Official Tournaments</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #0d0f17; 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            margin: 0;
+            padding: 15px;
+            transition: background 0.5s ease;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(13, 15, 23, 0.92); 
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ffaa00; 
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #ffaa00;
+            text-transform: uppercase;
+            font-size: 26px;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.4);
+        }
+
+        .tournament-list {
+            margin-top: 10px;
+        }
+
+        .card {
+            background: rgba(23, 27, 38, 0.98);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 18px;
+            border-left: 5px solid #ffaa00;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .badge-container {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .stage-badge {
+            background: #ffaa00;
+            color: #0d0f17;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .group-badge {
+            background: #00ffcc;
+            color: #0d0f17;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .card h3 {
+            margin: 0 0 15px 0;
+            color: #00ffcc;
+            font-size: 19px;
+            max-width: 65%;
+            word-wrap: break-word;
+            line-height: 1.2;
+        }
+
+        .card p {
+            margin: 8px 0;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+            padding-bottom: 4px;
+        }
+
+        .label {
+            color: #8a92a6;
+        }
+
+        .value-highlight {
+            color: #ffaa00;
+            font-weight: bold;
+        }
+
+        .match-schedule-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 8px;
+        }
+
+        .match-title {
+            color: #00ffcc;
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(0, 255, 204, 0.15);
+            padding-bottom: 3px;
+            margin-bottom: 5px;
+        }
+
+        .admin-only {
+            display: none; 
+            margin-top: 25px;
+        }
+
+        .admin-panel {
+            background: #121620;
+            border: 1px dashed #ffaa00;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #8a92a6;
+        }
+
+        .match-input-row {
+            background: rgba(255, 255, 255, 0.01);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .match-input-row label {
+            color: #00ffcc;
+            font-weight: bold;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+        .row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 11px;
+            border-radius: 6px;
+            border: 1px solid #232936;
+            background: #0d0f17;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #ffaa00;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        button {
+            background: #ffaa00;
+            color: #0d0f17;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            border: none;
+            transition: background 0.2s;
+        }
+
+        button:active {
+            background: #cc8800;
+        }
+
+        .delete-btn {
+            background: #1d2230;
+            color: #ff4655;
+            padding: 6px 12px;
+            font-size: 12px;
+            width: auto;
+            margin-top: 12px;
+            border: 1px solid #ff4655;
+            text-transform: none;
+            display: block;
+            margin-left: auto;
+        }
+
+        .bg-btn {
+            background: #232936;
+            color: #fff;
+            margin-top: 8px;
+            font-size: 13px;
+            text-transform: none;
+        }
+
+        .login-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        
+        .admin-login-btn {
+            background: transparent;
+            color: #4a526b; 
+            border: 1px solid #232936;
+            font-size: 13px;
+            padding: 8px 16px;
+            width: auto;
+            display: inline-block;
+            text-transform: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: #121620;
+            border: 1px solid #ffaa00;
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.6);
+        }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🔥 Scarfall 2.0 🔥</h1>
+            <p style="color: #8a92a6; font-size: 13px; margin: 6px 0 0 0; dashed #ffaa00">Live Tournament Dashboard</p>
+        </header>
+
+        <div class="tournament-list" id="tournamentContainer">
+            <p style="text-align:center; color:#8a92a6; font-size:14px; padding: 20px;">Setting up live sync...</p>
+        </div>
+
+        <div class="admin-only" id="adminSection">
+            <div class="admin-panel">
+                <h3 style="color: #ffaa00; margin-top: 0; border-bottom: 1px dashed #232936; padding-bottom: 8px; font-size:18px;">⚙️ Admin Control Panel</h3>
+                
+                <div class="form-group" style="background: #1c2130; padding: 12px; border-radius: 6px; margin-bottom: 15px; border: 1px solid rgba(255, 170, 0, 0.3);">
+                    <label style="color: #ffaa00; font-weight: bold;">🔐 Update Login Credentials:</label>
+                    <input type="text" id="newEmail" placeholder="New Username / Email" style="margin-top:6px; margin-bottom:6px;">
+                    <input type="password" id="newPass" placeholder="New Password" style="margin-bottom:8px;">
+                    <button style="background:#00ffcc; color:#0d0f17; font-size:13px; padding:8px;" onclick="updateAdminCredentials()">Save Access Info</button>
+                </div>
+
+                <div class="form-group" style="background: #171b26; padding: 12px; border-radius: 6px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);">
+                    <label style="color: #00ffcc; font-weight: bold;">🖼️ Change Live Background Image:</label>
+                    <input type="file" id="bgFile" accept="image/*" style="padding:5px; margin-top:4px;">
+                    <button type="button" class="bg-btn" style="background:#ff4655; color:white;" onclick="resetBackground()">Remove Image / Default Dark</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Tournament Stage Tier:</label>
+                    <select id="tourStage">
+                        <option value="Qualifiers">Qualifiers</option>
+                        <option value="Semi-Finals">Semi-Finals</option>
+                        <option value="Grand Final">Grand Final</option>
+                        <option value="Daily Scrims">Daily Scrims</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Allocation Group:</label>
+                    <select id="groupName">
+                        <option value="">No Group Assigned</option>
+                        <option value="Group A">Group A</option>
+                        <option value="Group B">Group B</option>
+                        <option value="Group C">Group C</option>
+                        <option value="Group D">Group D</option>
+                        <option value="All Groups">All Groups</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Authorized Map Pool:</label>
+                    <select id="mapName">
+                        <option value="Kirok">Kirok</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Kirok + Mumbai">Kirok + Mumbai</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tournament / Event Title:</label>
+                    <input type="text" id="tourName" placeholder="e.g., Scarfall Open Season 2">
+                </div>
+
+                <div class="row" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label>📅 Match Calendar Date:</label>
+                        <input type="date" id="tourDate">
+                    </div>
+                    <div class="form-group">
+                        <label>⏱️ Day/Timeline Label:</label>
+                        <select id="tourDayLabel">
+                            <option value="">None</option>
+                            <option value="Day 1">Day 1</option>
+                            <option value="Day 2">Day 2</option>
+                            <option value="Day 3">Day 3</option>
+                            <option value="Day 4">Day 4</option>
+                            <option value="Grand Finale">Grand Finale</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h4 style="color:#ffaa00; margin: 18px 0 8px 0; border-bottom: 1px solid #232936; padding-bottom:5px; font-size:14px;">🕒 Configure Scheduled Matches (Upto 5 Slots):</h4>
+                
+                <div class="match-input-row">
+                    <label>Match 1</label>
+                    <div class="row">
+                        <div class="form-group"><input type="time" id="m1_idp"></div>
+                        <div class="form-group"><input type="time" id="m1_start"></div>
+                    </div>
+                </div>
+                <div class="match-input-row">
+                    <label>Match 2</label>
+                    <div class="row">
+                        <div class="form-group"><input type="time" id="m2_idp"></div>
+                        <div class="form-group"><input type="time" id="m2_start"></div>
+                    </div>
+                </div>
+                <div class="match-input-row">
+                    <label>Match 3</label>
+                    <div class="row">
+                        <div class="form-group"><input type="time" id="m3_idp"></div>
+                        <div class="form-group"><input type="time" id="m3_start"></div>
+                    </div>
+                </div>
+                <div class="match-input-row">
+                    <label>Match 4</label>
+                    <div class="row">
+                        <div class="form-group"><input type="time" id="m4_idp"></div>
+                        <div class="form-group"><input type="time" id="m4_start"></div>
+                    </div>
+                </div>
+                <div class="match-input-row">
+                    <label>Match 5</label>
+                    <div class="row">
+                        <div class="form-group"><input type="time" id="m5_idp"></div>
+                        <div class="form-group"><input type="time" id="m5_start"></div>
+                    </div>
+                </div>
+
+                <button type="button" style="margin-top:10px;" onclick="addTournament()">Publish Live Schedule</button>
+            </div>
+        </div>
+
+        <div class="login-section">
+            <button class="admin-login-btn" id="loginBtn" onclick="openLoginModal()">Admin Login</button>
+            <button class="admin-login-btn" id="logoutBtn" onclick="logout()" style="display:none; color:#ff4655; border-color:#ff4655;">Logout System</button>
+        </div>
+    </div>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h3 style="color:#ffaa00; margin-top:0; font-size:16px;">🔐 System Authentication</h3>
+            <div class="form-group">
+                <label>Username / Email:</label>
+                <input type="text" id="loginEmail" placeholder="Default account: admin">
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="loginPassword" placeholder="Default passcode: 1234">
+            </div>
+            <button type="button" onclick="authenticateAdmin()" style="margin-bottom:10px;">Verify Security Login</button>
+            <button type="button" onclick="forgotPasswordReset()" style="background:#ff4655; color:#fff; margin-bottom:12px; font-size:13px; padding:7px;">⚠️ Emergency Password Reset</button>
+            <button type="button" onclick="closeLoginModal()" style="background:#232936; color:#fff;">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Global Free Public Realtime Sync Pipeline Database configuration fallback logic engine
+        let database;
+        try {
+            const firebaseConfig = {
+                databaseURL: "https://scarfall-tournament-live-default-rtdb.firebaseio.com/"
+            };
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+        } catch(e) {
+            console.error("Firebase startup fault handled gracefully:", e);
+        }
+
+        let isAdmin = false;
+
+        // Initialize default systems storage safely without overriding previous states
+        if(!localStorage.getItem("scarfall_admin_email")) { localStorage.setItem("scarfall_admin_email", "admin"); }
+        if(!localStorage.getItem("scarfall_admin_pass")) { localStorage.setItem("scarfall_admin_pass", "1234"); }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadBackground(); 
+            initLiveStreamingData(); 
+
+            // Handle file reader gallery selections uploads inputs stream
+            document.getElementById('bgFile').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64Image = event.target.result;
+                        document.body.style.backgroundImage = `url('${base64Image}')`;
+                        localStorage.setItem("scarfall_gallery_bg", base64Image);
+                        alert("Background theme updated successfully from system storage!");
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        function resetBackground() {
+            document.body.style.backgroundImage = "none";
+            document.body.style.backgroundColor = "#0d0f17";
+            localStorage.removeItem("scarfall_gallery_bg");
+            document.getElementById("bgFile").value = "";
+            alert("Default dark tactical dashboard color theme applied.");
+        }
+
+        function loadBackground() {
+            const savedBg = localStorage.getItem("scarfall_gallery_bg");
+            if(savedBg) { document.body.style.backgroundImage = `url('${savedBg}')`; }
+        }
+
+        function openLoginModal() { document.getElementById("loginModal").style.display = "flex"; }
+        function closeLoginModal() {
+            document.getElementById("loginModal").style.display = "none";
+            document.getElementById("loginEmail").value = "";
+            document.getElementById("loginPassword").value = "";
+        }
+
+        function authenticateAdmin() {
+            const emailInput = document.getElementById("loginEmail").value.trim();
+            const passInput = document.getElementById("loginPassword").value;
+            const savedEmail = localStorage.getItem("scarfall_admin_email");
+            const savedPass = localStorage.getItem("scarfall_admin_pass");
+
+            if (emailInput === savedEmail && passInput === savedPass) {
+                isAdmin = true;
+                document.getElementById("adminSection").style.display = "block";
+                document.getElementById("logoutBtn").style.display = "inline-block";
+                document.getElementById("loginBtn").style.display = "none"; 
+                closeLoginModal();
+                alert("Access approved. Active Admin session active.");
+                initLiveStreamingData();
+            } else {
+                alert("Incorrect username or password. Match values failed authorization!");
+            }
+        }
+
+        function forgotPasswordReset() {
+            const confirmReset = confirm("Reset administration values to defaults?\nUser: admin\nPass: 1234");
+            if(confirmReset) {
+                localStorage.setItem("scarfall_admin_email", "admin");
+                localStorage.setItem("scarfall_admin_pass", "1234");
+                document.getElementById("loginEmail").value = "admin";
+                document.getElementById("loginPassword").value = "1234";
+                alert("Credentials modified successfully! Tap the login button to authorize dashboard access.");
+            }
+        }
+
+        function updateAdminCredentials() {
+            const newEmail = document.getElementById("newEmail").value.trim();
+            const newPass = document.getElementById("newPass").value;
+            if(!newEmail || !newPass) { alert("Inputs validation failed: Empty values no
